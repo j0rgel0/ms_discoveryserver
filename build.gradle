@@ -1,0 +1,98 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.0'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.lox'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+def springCloudVersion = '2024.0.0'
+
+def eurekaServerDependencies = [
+        'org.springframework.cloud:spring-cloud-starter-config',
+        'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+]
+
+// Lombok configuration:
+// - Automatically generating getters, setters, equals, hashCode, and toString
+// - Enforcing the use of Lombok annotations
+def lombokDependencies = [
+        'org.projectlombok:lombok:1.18.36'
+]
+
+// Observability
+// Logging
+def loggingDependencies = [
+        'com.github.loki4j:loki-logback-appender:1.6.0-rc1',
+        'net.logstash.logback:logstash-logback-encoder:7.3'
+]
+
+// Metrics can be any kind of measurable information about our application like
+// JVM statistics, Thread Count, Heap Memory information, etc.
+// To collect metrics of our application, we need to first enable
+// Spring Boot Actuator in our project by adding the below dependency:
+
+// Metrics.
+def metricsDependencies = [
+        'org.springframework.boot:spring-boot-starter-actuator',
+        'io.micrometer:micrometer-registry-prometheus'
+
+// Next, we have to add another dependency to expose the metrics of
+// our application, Spring Boot uses Micrometer to collect metrics,
+// and by adding the below dependency we can configure Micrometer
+// to expose an endpoint that can be scraped by Prometheus.
+]
+
+// Distributed Tracing
+// Prior to Spring Boot 3, we used to add the Spring Cloud Sleuth
+// dependency to add distributed tracing capabilities to our
+// application, but from Spring Boot 3, Spring Cloud Sleuth is no
+// longer needed and this is replaced by the Micrometer Tracing Project.
+// Distributed Tracing
+def tracingDependencies = [
+        'io.micrometer:micrometer-tracing-bridge-brave:1.4.1',
+        'io.zipkin.reporter2:zipkin-reporter-brave:3.4.3'
+// Micrometer-tracing-bridge-brave is the dependency that does all
+// the magic and adds distributed tracing for our application.
+// Whereas zipkin-reporter-brave will export the tracing information to Tempo.
+]
+
+def testDependencies = [
+        'org.springframework.boot:spring-boot-starter-test'
+]
+
+dependencies {
+    implementation 'org.springframework:spring-core'
+
+    eurekaServerDependencies.each { implementation it }
+    lombokDependencies.each { compileOnly it }
+    lombokDependencies.each { annotationProcessor it }
+    lombokDependencies.each { testCompileOnly it }
+    metricsDependencies.each { implementation it }
+    loggingDependencies.each { implementation it }
+    tracingDependencies.each { implementation it }
+    testDependencies.each { testImplementation it }
+
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
