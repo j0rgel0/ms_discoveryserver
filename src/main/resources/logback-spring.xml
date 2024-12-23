@@ -36,24 +36,24 @@
         <immediateFlush>true</immediateFlush>
     </appender>
 
-    <!-- RollingFileAppender for local storage -->
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- Defines pattern for rotated log files -->
-            <fileNamePattern>logs/app-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- Retain logs for the last 30 days -->
-            <maxHistory>30</maxHistory>
-            <!-- Maximum size for compression -->
-            <totalSizeCap>1GB</totalSizeCap>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+<!--    &lt;!&ndash; RollingFileAppender for local storage &ndash;&gt;-->
+<!--    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--            &lt;!&ndash; Defines pattern for rotated log files &ndash;&gt;-->
+<!--            <fileNamePattern>logs/app-%d{yyyy-MM-dd}.log</fileNamePattern>-->
+<!--            &lt;!&ndash; Retain logs for the last 30 days &ndash;&gt;-->
+<!--            <maxHistory>30</maxHistory>-->
+<!--            &lt;!&ndash; Maximum size for compression &ndash;&gt;-->
+<!--            <totalSizeCap>1GB</totalSizeCap>-->
+<!--        </rollingPolicy>-->
+<!--        <encoder>-->
+<!--            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+<!--        </encoder>-->
+<!--    </appender>-->
 
     <!-- Configure logging level and appenders -->
     <root level="INFO">
         <appender-ref ref="LOKI"/>
-        <appender-ref ref="FILE"/>
+<!--        <appender-ref ref="FILE"/>-->
     </root>
 </configuration>
